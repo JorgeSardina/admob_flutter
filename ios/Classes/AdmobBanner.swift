@@ -73,6 +73,9 @@ class AdmobBanner : NSObject, FlutterPlatformView {
     fileprivate func requestAd() {
         if let ad = getBannerAdView() {
             let request = GADRequest()
+            let extras = GADExtras()
+            extras.additionalParameters = ["npa": "1"]
+            request.register(extras)
             ad.load(request)
         }
     }

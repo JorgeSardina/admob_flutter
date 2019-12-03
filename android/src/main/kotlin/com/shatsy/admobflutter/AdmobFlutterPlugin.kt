@@ -8,6 +8,9 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 import com.google.android.gms.ads.MobileAds
+import android.os.Bundle
+
+
 
 fun createAdListener(channel: MethodChannel) : AdListener {
   return object: AdListener() {
@@ -37,6 +40,14 @@ class AdmobFlutterPlugin(private val context: Context): MethodCallHandler {
       registrar
         .platformViewRegistry()
         .registerViewFactory("admob_flutter/banner", AdmobBannerFactory(registrar.messenger()))
+    }
+
+
+    fun getExtrasBundle(personalizedAds: Boolean): Bundle {
+      val npa: String = if (personalizedAds) "0" else "1"
+      val extras = Bundle()
+      extras.putString("npa", npa)
+      return extras
     }
   }
 
