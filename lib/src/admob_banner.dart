@@ -8,11 +8,13 @@ import 'admob_events.dart';
 class AdmobBanner extends StatefulWidget {
   final String adUnitId;
   final AdmobBannerSize adSize;
+  final bool relevantAds;
   final void Function(AdmobAdEvent, Map<String, dynamic>) listener;
   final void Function(AdmobBannerController) onBannerCreated;
 
   AdmobBanner({
     Key key,
+    @required this.relevantAds,
     @required this.adUnitId,
     @required this.adSize,
     this.listener,
@@ -38,6 +40,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
           creationParams: <String, dynamic>{
             "adUnitId": widget.adUnitId,
             "adSize": widget.adSize.toMap,
+            "relevantAds": widget.relevantAds,
           },
           creationParamsCodec: StandardMessageCodec(),
           onPlatformViewCreated: _onPlatformViewCreated,

@@ -26,8 +26,15 @@ class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: H
     adView.adSize = getSize(args?.get("adSize") as HashMap<*, *>)
     adView.adUnitId = args?.get("adUnitId") as String?
 
+    var relevantAds = args?.get("relevantAds") as Boolean?
+
+    if (relevantAds == null) relevantAds = false
+
+
+    // println("Requesting relevant ads = $relevantAds")
+
     val adRequest = AdRequest.Builder()
-            .addNetworkExtrasBundle(AdMobAdapter::class.java, AdmobFlutterPlugin.getExtrasBundle(false))
+            .addNetworkExtrasBundle(AdMobAdapter::class.java, AdmobFlutterPlugin.getExtrasBundle(relevantAds!!))
             .build()
     adView.loadAd(adRequest)
   }
