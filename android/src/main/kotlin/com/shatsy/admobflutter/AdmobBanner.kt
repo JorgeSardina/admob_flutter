@@ -33,9 +33,11 @@ class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: H
 
     // println("Requesting relevant ads = $relevantAds")
 
-    val adRequest = AdRequest.Builder()
-            .addNetworkExtrasBundle(AdMobAdapter::class.java, AdmobFlutterPlugin.getExtrasBundle(relevantAds!!))
-            .build()
+    val adRequestBuilder = AdRequest.Builder()
+    if (!relevantAds!!){
+      adRequestBuilder.addNetworkExtrasBundle(AdMobAdapter::class.java, AdmobFlutterPlugin.getExtrasBundle(relevantAds!!))
+    }
+    val adRequest = adRequestBuilder.build()
     adView.loadAd(adRequest)
   }
 
