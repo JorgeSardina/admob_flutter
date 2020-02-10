@@ -8,6 +8,8 @@
 build/
 .idea
 example/ios/Flutter/flutter_export_environment.sh
+.vscode
+example/.flutter-plugins-dependencies
 
 
 # Android related
