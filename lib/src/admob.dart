@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
 
 class Admob {
-  Admob.initialize(String appId) {
+  static Future<void> initialize(String appId) async {
     MethodChannel _channel = const MethodChannel('admob_flutter');
-    _channel.invokeMethod('initialize', appId);
+    await _channel.invokeMethod('initialize', appId);
   }
 }
