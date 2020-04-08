@@ -2,12 +2,13 @@ package com.shatsy.admobflutter
 
 import android.content.Context
 import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.MobileAds
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
-import com.google.android.gms.ads.MobileAds
 import android.os.Bundle
 
 
@@ -57,6 +58,28 @@ class AdmobFlutterPlugin(private val context: Context): MethodCallHandler {
       "initialize" -> {
         MobileAds.initialize(context)
         result.success(null)
+      }
+      "banner_size" -> {
+        val args = call.arguments as HashMap<*, *>
+        val name = args["name"] as String
+        val width = args["width"] as Int
+        when(name) {
+          "SMART_BANNER" -> {
+            val metrics = context.resources.displayMetrics
+            result.success(hashMapOf(
+                    "width" to AdSize.SMART_BANNER.getWidthInPixels(context) / metrics.density,
+                    "height" to AdSize.SMART_BANNER.getHeightInPixels(context) / metrics.density
+            ))
+          }
+          "ADAPTIVE_BANNER" -> {
+            val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width)
+            result.success(hashMapOf(
+              "width" to adSize.width,
+              "height" to adSize.height
+            ))
+          }
+          else -> result.error("banner_size",  "not implemented name", name)
+        }
       }
       else -> result.notImplemented()
     }
