@@ -9,6 +9,9 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
+import android.os.Bundle
+
+
 
 fun createAdListener(channel: MethodChannel) : AdListener {
   return object: AdListener() {
@@ -39,11 +42,23 @@ class AdmobFlutterPlugin(private val context: Context): MethodCallHandler {
         .platformViewRegistry()
         .registerViewFactory("admob_flutter/banner", AdmobBannerFactory(registrar.messenger()))
     }
+
+
+    fun getExtrasBundle(personalizedAds: Boolean): Bundle {
+      val npa: String = if (personalizedAds) "0" else "1"
+      val extras = Bundle()
+      extras.putString("npa", npa)
+      return extras
+    }
   }
 
   override fun onMethodCall(call: MethodCall, result: Result) {
     when(call.method) {
-      "initialize" -> MobileAds.initialize(context)
+      "getPlatformVersion" -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
+      "initialize" -> {
+        MobileAds.initialize(context)
+        result.success(null)
+      }
       "banner_size" -> {
         val args = call.arguments as HashMap<*, *>
         val name = args["name"] as String

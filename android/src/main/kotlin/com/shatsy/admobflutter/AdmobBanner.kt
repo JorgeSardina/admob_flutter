@@ -11,6 +11,9 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.platform.PlatformView
+import com.google.ads.mediation.admob.AdMobAdapter
+
+
 
 class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: HashMap<*, *>?) : PlatformView, MethodCallHandler {
   private val channel: MethodChannel = MethodChannel(messenger, "admob_flutter/banner_$id")
@@ -22,7 +25,18 @@ class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: H
     adView.adSize = getSize(context, args?.get("adSize") as HashMap<*, *>)
     adView.adUnitId = args?.get("adUnitId") as String?
 
-    val adRequest = AdRequest.Builder().build()
+    var relevantAds = args?.get("relevantAds") as Boolean?
+
+    if (relevantAds == null) relevantAds = false
+
+
+    // println("Requesting relevant ads = $relevantAds")
+
+    val adRequestBuilder = AdRequest.Builder()
+    if (!relevantAds!!){
+      adRequestBuilder.addNetworkExtrasBundle(AdMobAdapter::class.java, AdmobFlutterPlugin.getExtrasBundle(relevantAds!!))
+    }
+    val adRequest = adRequestBuilder.build()
     adView.loadAd(adRequest)
   }
 
