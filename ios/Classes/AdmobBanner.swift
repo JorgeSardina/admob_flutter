@@ -67,8 +67,17 @@ class AdmobBanner : NSObject, FlutterPlatformView {
                 flutterResult(FlutterMethodNotImplemented)
             }
         }
-        adView.load(GADRequest())
+        
+        let relevantAds = args["relevantAds"] as? Bool ?? false
+        let request = GADRequest()
+        print("Loading relevant ads ", relevantAds)
 
+        if !relevantAds {
+            let extras = GADExtras()
+            extras.additionalParameters = ["npa": "1"]
+            request.register(extras)
+        }
+        adView.load(request)
         return adView
     }
     

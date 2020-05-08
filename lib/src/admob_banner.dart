@@ -79,6 +79,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
               creationParams: <String, dynamic>{
                 "adUnitId": widget.adUnitId,
                 "adSize": widget.adSize.toMap,
+                "relevantAds": widget.relevantAds,
               },
               creationParamsCodec: const StandardMessageCodec(),
               onPlatformViewCreated: _onPlatformViewCreated,
