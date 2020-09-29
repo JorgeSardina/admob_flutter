@@ -1,3 +1,34 @@
+## [1.0.0] - 2020/09/21
+- Added support for non-personalized ads. PR [215](https://github.com/kmcgill88/admob_flutter/pull/215). Thank you [Skyost](https://github.com/Skyost)!
+- **REQUIRES Xcode 12**
+
+## [1.0.0-beta.7] - 2020/09/05
+- Resolve iOS 14 [Dependency issue](https://github.com/kmcgill88/admob_flutter/issues/214).
+
+## [1.0.0-beta.6] - 2020/08/31
+- Add [iOS 14 Support](https://github.com/kmcgill88/admob_flutter/issues/208). Thank you [Skyost](https://github.com/Skyost)!
+    - Bump iOS min version to iOS 9
+    - iOS REQUIRES Xcode 12+ to build for iOS 14
+    - Update Bitrise build machine to Xcode 12.0.x, on macOS 10.15.5 (Catalina); Flutter 1.20.2
+- Added some extension banner ad recipes
+- Added page navigation to example app.
+
+## [1.0.0-beta.5] - 2020/06/20
+- Fixed [183](https://github.com/kmcgill88/admob_flutter/issues/183) iOS Reward Ad consecutive loads
+
+## [1.0.0-beta.4] - 2020/06/02
+- Removed some dead code from `AdmobRewardPlugin.swift`
+- Reverted: Explicitly `dispose` Banners via `AdmobBannerController`
+- More FAQ's added to README
+
+## [1.0.0-beta.3] - 2020/05/21
+- Add support for `testDeviceIds`
+- Add some FAQ's to README
+- Explicitly `dispose` Banners via `AdmobBannerController`
+- Update iOS and Android API versions
+- Update iOS rewards to use new api
+- Update Bitrise build machine to Xcode 11.5.x, on macOS 10.15.4 (Catalina); Flutter 1.17.1
+
 ## [1.0.0-beta.2] - 2020/04/03
 - Add Adaptive banner support.
 - Now prevents ads from being reloaded on setState.

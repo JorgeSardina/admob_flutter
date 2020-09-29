@@ -18,6 +18,8 @@
 
 import UIKit
 import GoogleMobileAds
+import AppTrackingTransparency
+import AdSupport
 
 public class SwiftAdmobFlutterPlugin: NSObject, FlutterPlugin {
     
@@ -38,10 +40,22 @@ public class SwiftAdmobFlutterPlugin: NSObject, FlutterPlugin {
     case "initialize":
         // https://developers.google.com/admob/ios/test-ads#enable_test_devices
         // **iOS simulators are automatically configured as test devices.**
-        // GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = ["You're physical iDevice Id"]
         GADMobileAds.sharedInstance().start { (status: GADInitializationStatus) in
             print("iOS Admob status: \(status.adapterStatusesByClassName)")
         }
+        if let args = call.arguments as? [String] {
+            GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = args
+        }
+	case "request_tracking_authorization":
+		if #available(iOS 14, *) {
+			ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
+				print("Tracking authorization completed. \(status)")
+				result(status == ATTrackingManager.AuthorizationStatus.authorized)
+			})
+		}
+		else {
+			result(true)
+		}
     case "banner_size":
         guard let args = call.arguments as? [String: Any],
             let name = args["name"] as? String,

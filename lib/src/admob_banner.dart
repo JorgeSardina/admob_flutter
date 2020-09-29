@@ -12,6 +12,7 @@ class AdmobBanner extends StatefulWidget {
   final bool relevantAds;
   final void Function(AdmobAdEvent, Map<String, dynamic>) listener;
   final void Function(AdmobBannerController) onBannerCreated;
+  final bool nonPersonalizedAds;
 
   AdmobBanner({
     Key key,
@@ -20,6 +21,7 @@ class AdmobBanner extends StatefulWidget {
     @required this.adSize,
     this.listener,
     this.onBannerCreated,
+    this.nonPersonalizedAds = false,
   }) : super(key: key);
 
   @override
@@ -27,7 +29,7 @@ class AdmobBanner extends StatefulWidget {
 }
 
 class _AdmobBannerState extends State<AdmobBanner> {
-  UniqueKey _key = UniqueKey();
+  final UniqueKey _key = UniqueKey();
   AdmobBannerController _controller;
   Future<Size> adSize;
 
@@ -61,11 +63,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
             child: AndroidView(
               key: _key,
               viewType: 'admob_flutter/banner',
-              creationParams: <String, dynamic>{
-                "adUnitId": widget.adUnitId,
-                "adSize": widget.adSize.toMap,
-                "relevantAds": widget.relevantAds,
-              },
+              creationParams: bannerCreationParams,
               creationParamsCodec: const StandardMessageCodec(),
               onPlatformViewCreated: _onPlatformViewCreated,
             ),
@@ -76,11 +74,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
             child: UiKitView(
               key: _key,
               viewType: 'admob_flutter/banner',
-              creationParams: <String, dynamic>{
-                "adUnitId": widget.adUnitId,
-                "adSize": widget.adSize.toMap,
-                "relevantAds": widget.relevantAds,
-              },
+              creationParams: bannerCreationParams,
               creationParamsCodec: const StandardMessageCodec(),
               onPlatformViewCreated: _onPlatformViewCreated,
             ),
@@ -93,11 +87,6 @@ class _AdmobBannerState extends State<AdmobBanner> {
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   void _onPlatformViewCreated(int id) {
     _controller = AdmobBannerController(id, widget.listener);
 
@@ -105,4 +94,10 @@ class _AdmobBannerState extends State<AdmobBanner> {
       widget.onBannerCreated(_controller);
     }
   }
+
+  Map<String, dynamic> get bannerCreationParams => <String, dynamic>{
+    'adUnitId': widget.adUnitId,
+    'adSize': widget.adSize.toMap,
+    'nonPersonalizedAds': widget.nonPersonalizedAds,
+  };
 }

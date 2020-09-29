@@ -42,6 +42,7 @@ public class AdmobIntersitialPlugin: NSObject, FlutterPlugin {
             return
         }
         let id = args["id"] as? Int ?? 0
+        // Defaults to test Id's from: https://developers.google.com/admob/ios/banner
         let adUnitId = args["adUnitId"] as? String ?? "ca-app-pub-3940256099942544/1033173712"
 
         switch call.method {
@@ -53,7 +54,7 @@ public class AdmobIntersitialPlugin: NSObject, FlutterPlugin {
             break
         case "load":
             allIds[id] = getInterstitialAd(id: id, interstantialAdUnitId: adUnitId)
-            loadInterstantialAd(id: id, interstantialAdUnitId: adUnitId)
+            loadInterstantialAd(id: id, interstantialAdUnitId: adUnitId, nonPersonalizedAds: (args["nonPersonalizedAds"] as? Bool) ?? false)
             result(nil)
             break
         case "isLoaded":
@@ -77,14 +78,23 @@ public class AdmobIntersitialPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    private func loadInterstantialAd(id: Int, interstantialAdUnitId: String) {
+    private func loadInterstantialAd(id: Int, interstantialAdUnitId: String, nonPersonalizedAds: Bool) {
         let interstantial = getInterstitialAd(id: id, interstantialAdUnitId: interstantialAdUnitId)
         let request = GADRequest()
+
+        if (nonPersonalizedAds) {
+            let extras = GADExtras()
+            extras.additionalParameters = ["npa": "1"]
+            request.register(extras)
+        }
+
         interstantial.load(request)
     }
     
     private func getInterstitialAd(id: Int, interstantialAdUnitId: String) -> GADInterstitial {
         if let interstantialAd = allIds[id] {
+            // https://developers.google.com/admob/ios/interstitial#use_gadinterstitialdelegate_to_reload
+            // "GADInterstitial is a one-time-use object. This means once an interstitial is shown, hasBeenUsed returns true and the interstitial can't be used to load another ad. To request another interstitial, you'll need to create a new GADInterstitial object."
             if (interstantialAd.hasBeenUsed) {
                 let interstantialAd = GADInterstitial(adUnitID: interstantialAdUnitId)
                 allIds[id] = interstantialAd

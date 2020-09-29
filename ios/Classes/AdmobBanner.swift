@@ -56,6 +56,8 @@ class AdmobBanner : NSObject, FlutterPlatformView {
         self.adView = adView
         adView.rootViewController = UIApplication.shared.keyWindow?.rootViewController
         adView.frame = frame.width == 0 ? CGRect(x: 0, y: 0, width: 1, height: 1) : frame
+        
+        // Defaults to test Id's from: https://developers.google.com/admob/ios/banner
         adView.adUnitID = args["adUnitId"] as? String ?? "ca-app-pub-3940256099942544/2934735716"
         channel.setMethodCallHandler { [weak self] (flutterMethodCall: FlutterMethodCall, flutterResult: FlutterResult) in
             switch flutterMethodCall.method {
@@ -67,17 +69,17 @@ class AdmobBanner : NSObject, FlutterPlatformView {
                 flutterResult(FlutterMethodNotImplemented)
             }
         }
-        
-        let relevantAds = args["relevantAds"] as? Bool ?? false
-        let request = GADRequest()
-        print("Loading relevant ads ", relevantAds)
 
-        if !relevantAds {
+        let request = GADRequest()
+
+        if ((args["nonPersonalizedAds"] as? Bool) == true) {
             let extras = GADExtras()
             extras.additionalParameters = ["npa": "1"]
             request.register(extras)
         }
+
         adView.load(request)
+
         return adView
     }
     
