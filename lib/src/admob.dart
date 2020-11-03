@@ -6,7 +6,7 @@ import 'package:admob_flutter/admob_flutter.dart';
 class Admob {
   static const MethodChannel _channel =  MethodChannel('admob_flutter');
 
-  static Future<void> Admob.initialize({List<String> testDeviceIds}) async {
+  static Future<void> initialize({List<String> testDeviceIds}) async {
     await _channel.invokeMethod('initialize', testDeviceIds);
   }
   
